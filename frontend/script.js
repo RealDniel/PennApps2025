@@ -172,6 +172,15 @@ function createDetectionElement(detection, index) {
 
   const confidencePercentage = Math.round(detection.confidence * 100);
 
+  const aiData = detection.carbon_footprint_info; // This will now be the JSON object
+
+  const conciseFact =
+    aiData && aiData.concise_fact ? aiData.concise_fact : "Data not available.";
+  const detailedInfo =
+    aiData && aiData.detailed_info
+      ? aiData.detailed_info
+      : "Detailed information is not available.";
+
   div.innerHTML = `
         <div class="detection-header">
             <span class="food-name">${detection.food_name}</span>
@@ -182,7 +191,8 @@ function createDetectionElement(detection, index) {
             ? `
             <div class="carbon-info">
                 <h4>🌱 Carbon Footprint Information</h4>
-                <p>${detection.carbon_footprint_info}</p>
+                <p>${conciseFact}</p>
+                <p>${detailedInfo}</p>
             </div>
         `
             : `
@@ -456,6 +466,13 @@ function updateDetectionInfo(detections) {
     const foodName = detection.food_name;
     const confidencePercentage = Math.round(confidence * 100);
 
+    // Get carbon footprint info
+    const aiData = detection.carbon_footprint_info;
+    const conciseFact =
+      aiData && aiData.concise_fact
+        ? aiData.concise_fact
+        : "Carbon data unavailable";
+
     // Determine confidence class
     let confidenceClass = "low-confidence";
     if (confidence > 0.8) {
@@ -467,8 +484,13 @@ function updateDetectionInfo(detections) {
     const detectionItem = document.createElement("div");
     detectionItem.className = `detection-item-mini ${confidenceClass}`;
     detectionItem.innerHTML = `
-      <span class="detection-name">${index + 1}. ${foodName}</span>
-      <span class="detection-confidence">${confidencePercentage}%</span>
+      <div class="detection-header">
+        <span class="detection-name">${index + 1}. ${foodName}</span>
+        <span class="detection-confidence">${confidencePercentage}%</span>
+      </div>
+      <div class="detection-carbon-info">
+        <span class="carbon-fact">🌱 ${conciseFact}</span>
+      </div>
     `;
 
     detectionList.appendChild(detectionItem);

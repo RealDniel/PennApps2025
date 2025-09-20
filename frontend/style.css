@@ -367,10 +367,7 @@ footer {
 }
 
 .detection-item-mini {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
+  padding: 10px 12px;
   margin: 5px 0;
   background: white;
   border-radius: 8px;
@@ -395,6 +392,13 @@ footer {
   color: #333;
 }
 
+.detection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .detection-confidence {
   background: #667eea;
   color: white;
@@ -402,6 +406,20 @@ footer {
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: bold;
+}
+
+.detection-carbon-info {
+  margin-top: 5px;
+}
+
+.carbon-fact {
+  font-size: 0.85rem;
+  color: #2e7d32;
+  font-style: italic;
+  background: #e8f5e8;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* Responsive design */

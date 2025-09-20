@@ -65,17 +65,50 @@ class FoodDetector:
 
         try:
             client = Cerebras(api_key=os.getenv('CEREBRAS_API_KEY'))
-            prompt = f"What is the average carbon footprint of {food_name}?"
+            prompt = f"""
+            Provide information about the carbon footprint of {food_name}.
+
+            IMPORTANT: Respond ONLY with a valid JSON object. Do not include any text before or after the JSON.
+
+            The JSON object must contain exactly these two fields:
+            1. "food_name": The name of the food
+            2. "concise_fact": A short, single-line string with the food's approximate carbon footprint (e.g., "0.1kg CO2 per kg")
+            3. "detailed_info": A paragraph explaining the carbon footprint in more detail, including factors that affect it and some educational snippets or alternatives
+
+            Example format:
+            {{"concise_fact": "Banana: 0.1kg CO2 per kg", "detailed_info": "Bananas have a relatively low carbon footprint compared to other foods..."}}
+            """
             chat_completion = client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-4-scout-17b-16e-instruct",
                 max_tokens=600,
                 temperature=0.2
             )
-            response = chat_completion.choices[0].message.content
-            FoodDetector.food_cache[food_name] = response
-            FoodDetector.last_query_time = now
-            return response
+            # Parse the JSON response
+            response_text = chat_completion.choices[0].message.content
+            print(f"AI Response for {food_name}: {response_text[:200]}...")  # Debug log
+
+            try:
+                response_json = json.loads(response_text)
+
+                # Cache the parsed JSON object
+                FoodDetector.food_cache[food_name] = response_json
+                FoodDetector.last_query_time = now
+
+                # Return the structured data
+                return response_json
+            except json.JSONDecodeError:
+                # If JSON parsing fails, return a fallback structure
+                fallback_response = {
+                    "concise_fact": f"{food_name}: Carbon footprint data unavailable",
+                    "detailed_info": f"Carbon footprint information for {food_name} is currently unavailable. This could be due to limited data or processing issues."
+                }
+
+                # Cache the fallback response
+                FoodDetector.food_cache[food_name] = fallback_response
+                FoodDetector.last_query_time = now
+
+                return fallback_response
         except Exception as e:
             print(f"Error querying AI: {e}")
             return None
