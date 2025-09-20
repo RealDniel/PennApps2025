@@ -21,6 +21,8 @@ const stopCameraBtn = document.getElementById("stopCameraBtn");
 const captureBtn = document.getElementById("captureBtn");
 const toggleDetectionBtn = document.getElementById("toggleDetectionBtn");
 const cameraStatus = document.getElementById("cameraStatus");
+const detectionInfo = document.getElementById("detectionInfo");
+const detectionList = document.getElementById("detectionList");
 
 // Camera state
 let stream = null;
@@ -307,6 +309,9 @@ function stopCamera() {
     detectionInterval = null;
     isDetectionEnabled = false;
   }
+
+  // Clear detection info
+  clearDetectionInfo();
 }
 
 function captureImage() {
@@ -416,10 +421,16 @@ async function performRealTimeDetection() {
           "active"
         );
 
+        // Update detection info panel
+        updateDetectionInfo(data.detections);
+
         // Show results after a short delay
         setTimeout(() => {
           displayResults(data);
         }, 1000);
+      } else {
+        // Clear detection info if no detections
+        clearDetectionInfo();
       }
     }
   } catch (err) {
@@ -430,6 +441,45 @@ async function performRealTimeDetection() {
 function updateCameraStatus(message, type = "") {
   cameraStatus.textContent = message;
   cameraStatus.className = `camera-status ${type}`;
+}
+
+function updateDetectionInfo(detections) {
+  if (!detections || detections.length === 0) {
+    clearDetectionInfo();
+    return;
+  }
+
+  detectionList.innerHTML = "";
+
+  detections.forEach((detection, index) => {
+    const confidence = detection.confidence;
+    const foodName = detection.food_name;
+    const confidencePercentage = Math.round(confidence * 100);
+
+    // Determine confidence class
+    let confidenceClass = "low-confidence";
+    if (confidence > 0.8) {
+      confidenceClass = "high-confidence";
+    } else if (confidence > 0.6) {
+      confidenceClass = "medium-confidence";
+    }
+
+    const detectionItem = document.createElement("div");
+    detectionItem.className = `detection-item-mini ${confidenceClass}`;
+    detectionItem.innerHTML = `
+      <span class="detection-name">${index + 1}. ${foodName}</span>
+      <span class="detection-confidence">${confidencePercentage}%</span>
+    `;
+
+    detectionList.appendChild(detectionItem);
+  });
+
+  detectionInfo.style.display = "block";
+}
+
+function clearDetectionInfo() {
+  detectionList.innerHTML = "";
+  detectionInfo.style.display = "none";
 }
 
 function blobToBase64(blob) {
