@@ -34,6 +34,8 @@ A modern web application that uses computer vision to detect food items in image
 - Node.js 18+
 - Camera access (for live detection)
 
+**Windows Users**: Make sure you have Visual C++ Build Tools installed for compiling some dependencies. Download from [Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+
 ### Backend Setup
 
 1. Navigate to the backend directory:
@@ -44,15 +46,30 @@ cd backend
 
 2. Create a virtual environment:
 
+**Linux/macOS:**
+
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
+```
+
+**Windows:**
+
+```cmd
+python -m venv venv
+venv\Scripts\activate
 ```
 
 3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+**Windows Users**: If you encounter issues with PyTorch installation, try:
+
+```cmd
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 ```
 
 4. Set up environment variables:
@@ -94,6 +111,17 @@ npm run dev
 ```
 
 The app will be available at `http://localhost:3000`
+
+## Quick Start (Windows)
+
+For Windows users, you can use the provided batch script:
+
+1. Double-click `start.bat` in the project root
+2. The script will automatically:
+   - Create a virtual environment
+   - Install dependencies
+   - Start both backend and frontend servers
+3. Open your browser to `http://localhost:3000`
 
 ## Usage
 
@@ -161,6 +189,35 @@ CEREBRAS_API_KEY=your_cerebras_api_key_here
 - The YOLO model will download automatically on first run
 - Ensure you have a stable internet connection
 - Check that the model file `yolov8n.pt` is in the project root
+
+### Windows-Specific Issues
+
+- **"yolo command not found"**: Add Python Scripts directory to your PATH:
+
+  - Find your Python installation (usually `C:\Users\YourUsername\AppData\Local\Programs\Python\Python3X\Scripts`)
+  - Add this directory to your system PATH environment variable
+  - Restart Command Prompt
+
+- **PyTorch installation fails**: Install PyTorch separately:
+
+  ```cmd
+  pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+  ```
+
+- **OpenCV issues**: Try installing opencv-python-headless:
+
+  ```cmd
+  pip uninstall opencv-python
+  pip install opencv-python-headless
+  ```
+
+- **Permission errors**: Run Command Prompt as Administrator
+
+- **Port already in use**: Kill the process using port 8000:
+  ```cmd
+  netstat -ano | findstr :8000
+  taskkill /PID <PID_NUMBER> /F
+  ```
 
 ## Development
 

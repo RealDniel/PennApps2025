@@ -9,6 +9,7 @@ from ultralytics import YOLO
 import time
 import os
 import base64
+import platform
 from io import BytesIO
 from PIL import Image
 from flask import Flask, request, jsonify
@@ -29,8 +30,28 @@ class FoodDetector:
 
     def __init__(self, confidence_threshold=0.5):
         """Initialize the YOLO model for food detection"""
-        self.model = YOLO('yolov8n.pt')
-        self.confidence_threshold = confidence_threshold
+        try:
+            print(f"🤖 Loading YOLO model on {platform.system()}...")
+
+            # Use absolute path for better cross-platform compatibility
+            model_path = os.path.join(os.getcwd(), 'yolov8n.pt')
+            if not os.path.exists(model_path):
+                # Try in parent directory
+                model_path = os.path.join(os.path.dirname(os.getcwd()), 'yolov8n.pt')
+
+            self.model = YOLO(model_path)
+            self.confidence_threshold = confidence_threshold
+            print("✅ YOLO model loaded successfully!")
+
+        except Exception as e:
+            print(f"❌ Error loading YOLO model: {e}")
+            print("💡 Troubleshooting tips:")
+            print("   - Make sure yolov8n.pt is in the project root")
+            print("   - Check that all dependencies are installed correctly")
+            if platform.system() == "Windows":
+                print("   - On Windows, ensure Python Scripts directory is in PATH")
+                print("   - Try running: pip install --upgrade ultralytics")
+            raise e
 
         # COCO class names
         self.food_classes = {
@@ -266,5 +287,16 @@ def detect_food_base64():
 
 if __name__ == '__main__':
     print("🍎 Starting Food Detection Flask Server...")
+    print(f"Running on {platform.system()} platform")
     print("Backend running on http://localhost:8000")
-    app.run(host='0.0.0.0', port=8000, debug=True)
+
+    try:
+        app.run(host='0.0.0.0', port=8000, debug=True)
+    except Exception as e:
+        print(f"❌ Error starting Flask server: {e}")
+        if platform.system() == "Windows":
+            print("💡 Windows troubleshooting tips:")
+            print("   - Make sure port 8000 is not in use by another application")
+            print("   - Try running as Administrator if you get permission errors")
+            print("   - Check Windows Firewall settings")
+        exit(1)

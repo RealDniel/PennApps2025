@@ -1,8 +1,10 @@
 flask==3.0.0
 flask-cors==4.0.0
-ultralytics
-opencv-python
-numpy
-Pillow
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=9.0.0
 cerebras-cloud-sdk
 python-dotenv
+torch>=2.0.0
+torchvision>=0.15.0
