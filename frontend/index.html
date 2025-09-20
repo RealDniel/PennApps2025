@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Detection & Carbon Footprint Analyzer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🍎 Food Detection & Carbon Footprint Analyzer</h1>
+        <p>
+          Upload an image to detect food items and learn about their
+          environmental impact
+        </p>
+      </header>
+
+      <main>
+        <!-- Mode Selection -->
+        <div class="mode-selection">
+          <button
+            class="mode-btn active"
+            id="uploadModeBtn"
+            onclick="switchMode('upload')"
+          >
+            📁 Upload Image
+          </button>
+          <button
+            class="mode-btn"
+            id="cameraModeBtn"
+            onclick="switchMode('camera')"
+          >
+            📷 Live Camera
+          </button>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section" id="uploadSection">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-content">
+              <div class="upload-icon">📷</div>
+              <h3>Drop an image here or click to browse</h3>
+              <p>Supports JPG, PNG, and other common image formats</p>
+              <input type="file" id="fileInput" accept="image/*" hidden />
+              <button
+                class="upload-btn"
+                onclick="document.getElementById('fileInput').click()"
+              >
+                Choose Image
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera Section -->
+        <div class="camera-section" id="cameraSection" style="display: none">
+          <div class="camera-container">
+            <video id="video" autoplay muted playsinline></video>
+            <canvas id="canvas" style="display: none"></canvas>
+            <div class="camera-controls">
+              <button
+                class="control-btn"
+                id="startCameraBtn"
+                onclick="startCamera()"
+              >
+                🎥 Start Camera
+              </button>
+              <button
+                class="control-btn"
+                id="stopCameraBtn"
+                onclick="stopCamera()"
+                style="display: none"
+              >
+                ⏹️ Stop Camera
+              </button>
+              <button
+                class="control-btn"
+                id="captureBtn"
+                onclick="captureImage()"
+                style="display: none"
+              >
+                📸 Capture & Analyze
+              </button>
+              <button
+                class="control-btn"
+                id="toggleDetectionBtn"
+                onclick="toggleDetection()"
+                style="display: none"
+              >
+                🔍 Toggle Detection
+              </button>
+            </div>
+            <div class="camera-status" id="cameraStatus">
+              Camera not started
+            </div>
+          </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none">
+          <div class="spinner"></div>
+          <p>Analyzing your image...</p>
+        </div>
+
+        <div class="results" id="results" style="display: none">
+          <h2>Detection Results</h2>
+          <div class="image-container">
+            <img id="resultImage" alt="Annotated image with detections" />
+          </div>
+          <div class="detections" id="detections">
+            <!-- Detection results will be populated here -->
+          </div>
+        </div>
+
+        <div class="error" id="error" style="display: none">
+          <h3>❌ Error</h3>
+          <p id="errorMessage"></p>
+        </div>
+      </main>
+
+      <footer>
+        <p>Powered by YOLO and Cerebras AI</p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
