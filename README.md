@@ -1,99 +1,217 @@
-# 🍎 Food Detection App
+# Food Detection App
 
-A real-time food detection application using YOLOv8 and OpenCV that identifies various food items through your camera with food names displayed on bounding boxes.
+A modern web application that uses AI-powered computer vision to detect food items in real-time. Built with Next.js frontend and FastAPI backend.
 
-## ✨ Features
+## Features
 
-- **Real-time Detection**: Live camera feed with instant food recognition
-- **Food Name Labels**: Food names displayed prominently on top of detection boxes
-- **Visual Feedback**: Color-coded bounding boxes based on confidence levels
-- **16+ Food Categories**: Fruits, vegetables, meals, and kitchen items
-- **Interactive Controls**: Save frames, pause/resume, toggle help
-- **High Performance**: Optimized for smooth real-time processing
+- 🎥 **Real-time camera detection** - Detect food items using your webcam
+- 📁 **Image upload** - Upload images to detect food items
+- 🤖 **AI-powered** - Uses YOLOv8 for accurate food detection
+- 🎨 **Modern UI** - Beautiful, responsive interface built with Tailwind CSS
+- ⚡ **Fast API** - FastAPI backend for high-performance image processing
 
-## 🚀 Quick Start
+## Architecture
 
-1. **Clone and Setup**:
+- **Frontend**: Next.js 14 with TypeScript and Tailwind CSS
+- **Backend**: FastAPI with Python
+- **AI Model**: YOLOv8 (nano version for speed)
+- **Computer Vision**: OpenCV for image processing
 
+## 🚀 Quick Start (For Your Friends)
+
+### Prerequisites
+- **Python 3.8+** ([Download here](https://www.python.org/downloads/))
+- **Node.js 18+** ([Download here](https://nodejs.org/))
+- **Git** ([Download here](https://git-scm.com/downloads))
+
+### Step 1: Clone the Repository
+```bash
+git clone <your-github-repo-url>
+cd <your-repo-name>
+```
+
+### Step 2: Easy Setup (Recommended)
+
+**For macOS/Linux:**
+```bash
+./start.sh
+```
+
+**For Windows:**
+```cmd
+start.bat
+```
+
+These scripts will automatically:
+- Set up Python virtual environment
+- Install all dependencies
+- Start both backend and frontend servers
+
+### Step 3: Access the Application
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+---
+
+## 🔧 Manual Setup (Alternative)
+
+If the startup script doesn't work, follow these manual steps:
+
+### Backend Setup
+
+1. **Navigate to backend directory:**
    ```bash
-   git clone <your-repo-url>
-   cd pennapps
+   cd backend
+   ```
+
+2. **Create Python virtual environment:**
+   ```bash
+   # On macOS/Linux:
+   python3 -m venv venv
+   source venv/bin/activate
+   
+   # On Windows:
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+
+3. **Install Python dependencies:**
+   ```bash
    pip install -r requirements.txt
    ```
 
-2. **Run the App**:
-
+4. **Start the FastAPI server:**
    ```bash
-   python3 food_detector.py
+   python main.py
+   ```
+   The backend will be available at `http://localhost:8000`
+
+### Frontend Setup (New Terminal)
+
+1. **Navigate to frontend directory:**
+   ```bash
+   cd frontend
    ```
 
-3. **Use the App**:
-   - Point your camera at food items
-   - Watch as detected foods are highlighted with colored boxes
-   - Food names appear clearly above each detection box
+2. **Install Node.js dependencies:**
+   ```bash
+   npm install
+   ```
 
-## 🎮 Controls
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   The frontend will be available at `http://localhost:3000`
 
-- **Q**: Quit the application
-- **S**: Save current frame as image
-- **H**: Toggle help overlay on/off
-- **SPACE**: Pause/Resume (enhanced version only)
+---
 
-## 🍽️ Supported Food Items
+## 🎯 What Your Friends Will See
 
-The app detects 16+ food categories:
+1. **Beautiful web interface** with camera detection and file upload
+2. **Real-time food detection** - just point camera at food items
+3. **Live overlay** showing detected food names and confidence scores
+4. **Image upload** functionality for static images
+5. **Responsive design** that works on desktop and mobile
 
-- **Fruits**: Apple, Banana, Orange
-- **Vegetables**: Broccoli, Carrot
-- **Meals**: Pizza, Hot Dog, Sandwich, Cake, Donut
-- **Kitchen Items**: Bottle, Wine Glass, Cup, Fork, Knife, Spoon, Bowl
-- **Appliances**: Microwave, Oven, Toaster, Refrigerator
+## 🎮 How to Use
 
-## 🎨 Visual Indicators
+### Real-time Camera Detection (Recommended)
+1. **Start Camera** → Click to activate your webcam
+2. **Start Real-time Detection** → Click to begin continuous detection
+3. **Point camera at food** → Detection results appear automatically in the overlay
+4. **Move around** → Results update every second as you point at different items
+5. **Stop Real-time Detection** → Click to pause continuous detection
 
-- **🟢 Green Box**: High confidence (>80%)
-- **🟡 Yellow Box**: Medium confidence (60-80%)
-- **🟠 Orange Box**: Lower confidence (50-60%)
+### Single Detection Mode
+1. **Start Camera** → Click to activate your webcam
+2. **Single Detection** → Click to analyze the current frame once
+3. **View results** → See detection results in the results section below
 
-## 📁 Project Structure
+### Image Upload
+1. **Choose File** → Select an image from your computer
+2. **Automatic processing** → The image will be analyzed automatically
+3. **View results** → See detection results with annotated image
 
-```
-pennapps/
-├── food_detector.py          # Main food detection app
-├── requirements.txt          # Python dependencies
-├── .gitignore               # Git ignore rules
-└── README.md                # This file
-```
+## 🛠️ Troubleshooting
 
-## 📋 Requirements
+### Common Issues
 
-- Python 3.7+
-- Webcam or camera device
-- OpenCV, Ultralytics YOLO, NumPy, Pillow
+**1. Camera not working:**
+- Make sure to allow camera permissions in your browser
+- Try refreshing the page and allowing permissions again
+- Check if another application is using your camera
 
-## 🔧 Technical Details
+**2. Backend connection error:**
+- Ensure the FastAPI server is running on port 8000
+- Check if port 8000 is available (not used by another application)
+- Try restarting the backend server
 
-- **Model**: YOLOv8 nano for fast inference
-- **Performance**: Real-time processing at 30 FPS
-- **Resolution**: 640x480 (optimized for performance)
-- **Confidence**: 50% threshold (adjustable)
-- **Platform**: Cross-platform (tested on macOS)
+**3. Model loading error:**
+- The YOLO model (`yolov8n.pt`) should be in the root directory
+- If missing, the model will download automatically on first run
+- Make sure you have internet connection for the first run
 
-## 🐛 Troubleshooting
+**4. CORS errors:**
+- Backend CORS is configured for `localhost:3000`
+- Make sure frontend is running on port 3000
+- Don't access frontend via IP address, use `localhost:3000`
 
-- **Camera not working**: Ensure no other apps are using the camera
-- **Window not visible**: Check your dock/taskbar or press Cmd+Tab to cycle through windows
-- **Poor detection**: Improve lighting or adjust confidence threshold
-- **Performance issues**: Close other applications to free up resources
+**5. Startup script not working:**
+- Make sure the script is executable: `chmod +x start.sh`
+- On Windows, use Git Bash or WSL to run the script
+- Follow the manual setup steps if the script fails
 
-## 🎯 Key Features
+### Getting Help
 
-The app successfully demonstrates:
+If you encounter issues:
+1. Check the terminal/console for error messages
+2. Make sure all prerequisites are installed
+3. Try the manual setup steps
+4. Check if ports 3000 and 8000 are available
 
-- Real-time object detection using YOLO
-- Food name labeling on bounding boxes
-- Color-coded confidence indicators
-- Interactive camera controls
-- Cross-platform compatibility
+## API Endpoints
 
-Perfect for food recognition, kitchen inventory, or educational purposes! 🍕🥗🍎
+- `GET /` - Health check
+- `GET /health` - API status
+- `POST /detect` - Upload image file for detection
+- `POST /detect-base64` - Send base64 encoded image for detection
+
+## Detected Food Items
+
+The app can detect the following food-related items:
+- Fruits: apple, banana, orange
+- Vegetables: broccoli, carrot
+- Prepared foods: pizza, sandwich, hot dog, donut, cake
+- Utensils: fork, knife, spoon, bowl, cup, bottle, wine glass
+
+## Development
+
+### Backend Development
+- The main API logic is in `backend/main.py`
+- Food detection logic is in the `FoodDetector` class
+- CORS is configured to allow requests from `localhost:3000`
+
+### Frontend Development
+- Main page component is in `frontend/src/app/page.tsx`
+- Uses React hooks for state management
+- Camera access uses the MediaDevices API
+- Image processing uses HTML5 Canvas
+
+## Troubleshooting
+
+1. **Camera not working**: Make sure to allow camera permissions in your browser
+2. **Backend connection error**: Ensure the FastAPI server is running on port 8000
+3. **Model loading error**: Make sure `yolov8n.pt` is in the correct location
+4. **CORS errors**: Check that the backend CORS settings allow your frontend URL
+
+## Future Enhancements
+
+- [ ] Real-time video streaming detection
+- [ ] Food nutrition information
+- [ ] Calorie counting
+- [ ] Multiple model support
+- [ ] User authentication
+- [ ] Detection history
+- [ ] Mobile app version
