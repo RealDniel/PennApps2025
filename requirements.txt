@@ -2,3 +2,5 @@ ultralytics
 opencv-python
 numpy
 Pillow
+cerebras-cloud-sdk
+dotenv

@@ -8,8 +8,18 @@ import numpy as np
 from ultralytics import YOLO
 import time
 import os
+from cerebras.cloud.sdk import Cerebras
+
+from dotenv import load_dotenv
+load_dotenv()  # this loads .env into os.environ
+
 
 class FoodDetector:
+
+    food_cache = {}
+    last_query_time = 0
+    QUERY_INTERVAL = 3  # seconds
+
     def __init__(self, confidence_threshold=0.5):
         """Initialize the YOLO model for food detection"""
         # Load YOLOv8 model (will download automatically on first run)
@@ -42,6 +52,35 @@ class FoodDetector:
         self.additional_food_items = {
             68: 'microwave', 69: 'oven', 70: 'toaster', 72: 'refrigerator'
         }
+
+    def ask_ai(self, food_name):
+        if food_name in FoodDetector.food_cache:
+            return FoodDetector.food_cache[food_name]
+
+        now = time.time()
+        if now - FoodDetector.last_query_time < FoodDetector.QUERY_INTERVAL:
+            return None
+
+
+        client = Cerebras(api_key = os.getenv('CEREBRAS_API_KEY'))
+
+        """Query Cerebras about the detected food"""
+        prompt = f"What is the average carbon footprint of {food_name}?"
+        chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+        model="llama-4-scout-17b-16e-instruct",
+        max_tokens = 600,
+        temperature = 0.2
+        )
+        response = chat_completion.choices[0].message.content
+        FoodDetector.food_cache[food_name] = response
+        FoodDetector.last_query_time = now
+        return response
 
     def detect_food(self, frame):
         """Detect food items in the frame and return annotated frame"""
@@ -77,6 +116,10 @@ class FoodDetector:
 
                         # Prepare label text with better formatting
                         food_name = self.food_items[class_id].replace('_', ' ').title()
+
+                        print(f"🔎 Asking AI about: {food_name}")
+                        print(self.ask_ai(food_name))
+
                         label = f"{food_name}: {confidence:.1%}"
 
                         # Get text size for background rectangle
